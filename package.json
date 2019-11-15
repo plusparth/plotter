@@ -1,14 +1,13 @@
 {
-	"name": "app-name",
-	"productName": "App Name",
+	"name": "plotter",
+	"productName": "Plotter",
 	"version": "0.0.0",
-	"description": "The best app ever",
+	"description": "Plots the output CSVs from HelixLogger",
 	"license": "MIT",
-	"repository": "sindresorhus/electron-boilerplate",
+	"repository": "plato2000/plotter",
 	"author": {
-		"name": "Your Name",
-		"email": "user@gmail.com",
-		"url": "https://sindresorhus.com"
+		"name": "Parth Oza",
+		"email": "parth@team4099.com"
 	},
 	"scripts": {
 		"postinstall": "electron-builder install-app-deps",
@@ -20,12 +19,21 @@
 		"release": "np"
 	},
 	"dependencies": {
+		"chart.js-rangeslider": "^1.2.5",
+		"chartjs": "^0.3.24",
+		"csv-parse": "^4.7.0",
+		"csv-parser": "^2.3.2",
 		"electron-context-menu": "^0.15.0",
 		"electron-debug": "^3.0.0",
 		"electron-store": "^4.0.0",
 		"electron-unhandled": "^3.0.0",
 		"electron-updater": "^4.0.6",
-		"electron-util": "^0.12.0"
+		"electron-util": "^0.12.0",
+		"jquery": "^3.4.1",
+		"moment": "^2.24.0",
+		"nouislider": "^14.0.3",
+		"randomcolor": "^0.5.4",
+		"remote": "^0.2.6"
 	},
 	"devDependencies": {
 		"electron": "^6.0.7",
@@ -44,7 +52,7 @@
 		"releaseDraft": false
 	},
 	"build": {
-		"appId": "com.company.AppName",
+		"appId": "com.team4099.Plotter",
 		"mac": {
 			"category": "public.app-category.social-networking",
 			"darkModeSupport": true
