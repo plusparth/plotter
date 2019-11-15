@@ -4,6 +4,8 @@ const parse = require('csv-parse')
 const fs = require('fs')
 const {dialog} = require('electron').remote
 const moment = require('moment')
+const randomcolor = require('randomcolor')
+var Chart = require('chart.js');
 
 var results = {}
 
@@ -15,12 +17,14 @@ var config = {
                 {
                     name: "EXAMPLE_1",
                     minY: 0,
-                    maxY: 1
+                    maxY: 1,
+                    position: 'left'
                 },
                 {
                     name: "EXAMPLE_2",
                     minY: 10,
-                    maxY: 1000
+                    maxY: 1000,
+                    position: 'right'
                 }
             ]
         }
@@ -69,22 +73,75 @@ $("#file-picker").click(function() {
                         });
                     }
                 })
-                .on('end', () => {
-                    console.log(results);
-                    // [
-                    //   { NAME: 'Daffy Duck', AGE: '24' },
-                    //   { NAME: 'Bugs Bunny', AGE: '22' }
-                    // ]
-
-                });
+                .on('end', renderGraphs);
         }
     });
-    var ctx = $("#chart")
-
-    var myChart = new RangeSliderChart({
-        chartCTX: ctx,
-        chartType: "Line",
-
-    })
 })
 
+function renderGraphs() {
+    var ctx = $("#chart")
+    var datasets = []
+    var yAxes = []
+
+    config.tabs[0].series.forEach(series => {
+        var color = randomcolor()
+        console.log(series)
+        datasets.push({
+            label: series.name,
+            backgroundColor: color,
+            borderColor: color,
+            fill: false,
+            data: results[series.name],
+            yAxisID: series.name
+        })
+        yAxes.push({
+            type: 'linear',
+            display: true,
+            position: series.position,
+            id: series.name,
+            ticks: {
+                min: series.minY,
+                max: series.maxY
+            },
+            scaleLabel: {
+                display: true,
+                labelString: series.name
+            }
+        })
+    })
+
+    console.log(datasets)
+    console.log(results)
+
+    var myChart = Chart.Line(ctx, {
+        data: {
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            hoverMode: 'index',
+            stacked: false,
+            title: {
+                display: false,
+                // text: 'Chart.js Line Chart - Multi Axis'
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Timestamp'
+                    },
+                    ticks: {
+                        major: {
+                            fontStyle: 'bold',
+                            fontColor: '#FF0000'
+                        }
+                    }
+                }],
+                yAxes: yAxes
+            }
+        }
+    })
+}
