@@ -4,8 +4,9 @@ const fs = require("fs")
 const {dialog} = require("electron").remote
 const moment = require("moment")
 const randomcolor = require("randomcolor")
-const Chart = require("chart.js");
-const settings = require("electron-settings");
+const Chart = require("chart.js")
+const settings = require("electron-settings")
+const noUiSlider = require("nouislider")
 
 var tabHTML = `
     <div class="tab-item{{ active }}">
@@ -24,9 +25,52 @@ var myChart = null
 
 var config = null
 
+var options = {
+    responsive: true,
+    hoverMode: "index",
+    stacked: false,
+    title: {
+        display: false,
+        // text: "Chart.js Line Chart - Multi Axis"
+    },
+    scales: {
+        xAxes: [{
+            type: "time",
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: "Timestamp"
+            },
+            ticks: {
+                major: {
+                    fontStyle: "bold",
+                    fontColor: "#FF0000"
+                }
+            }
+        }],
+        yAxes: null
+    },
+    elements: { 
+        point: { 
+            radius: 0,
+            hitRadius: 10,
+            hoverRadius: 10
+        },
+        line: {
+            borderWidth: 1,
+            tension: 0
+        }
+    },
+    tooltips: {
+        mode: "index",
+        position: "nearest"
+    }
+}
+
 const parser = parse({
     delimiter: ",",
-    columns: true
+    columns: true,
+    // skip_lines_with_error: true
 })
 
 function configLoad(files) {
@@ -94,11 +138,14 @@ function fileLoad(files) {
     if (files !== undefined) {
         settings.set("csv", files[0])
         // handle files
+        try {
+        document.title = files[0]
         fs.createReadStream(files[0])
             .pipe(parser)
             .on("readable", function() {
                 let data
                 while (data = parser.read()) {
+                    console.log(data)
                     // TODO: fix this thing to actually use the correct key
                     var tsKey = Object.keys(data)[0]
                     console.log(moment(data[tsKey]))
@@ -121,7 +168,11 @@ function fileLoad(files) {
                 }
             })
             .on("end", finishFileLoad);
+        } catch (error) {
+            console.log(error)
+        }
     }
+    
 }
 
 function finishFileLoad() {
@@ -166,66 +217,17 @@ function renderGraphs(tabId) {
     console.log(datasets)
     console.log(results)
 
+    options.scales.yAxes = yAxes
     if (myChart == null) {
         myChart = Chart.Line(ctx, {
             data: {
                 datasets: datasets
             },
-            options: {
-                responsive: true,
-                hoverMode: "index",
-                stacked: false,
-                title: {
-                    display: false,
-                    // text: "Chart.js Line Chart - Multi Axis"
-                },
-                scales: {
-                    xAxes: [{
-                        type: "time",
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: "Timestamp"
-                        },
-                        ticks: {
-                            major: {
-                                fontStyle: "bold",
-                                fontColor: "#FF0000"
-                            }
-                        }
-                    }],
-                    yAxes: yAxes
-                }
-            }
+            options: options
         })
     } else {
         myChart.data = { datasets: datasets }
-        myChart.options = {
-            responsive: true,
-            hoverMode: "index",
-            stacked: false,
-            title: {
-                display: false,
-                // text: "Chart.js Line Chart - Multi Axis"
-            },
-            scales: {
-                xAxes: [{
-                    type: "time",
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: "Timestamp"
-                    },
-                    ticks: {
-                        major: {
-                            fontStyle: "bold",
-                            fontColor: "#FF0000"
-                        }
-                    }
-                }],
-                yAxes: yAxes
-            }
-        }
+        myChart.options = options
         myChart.update()
     }
 }

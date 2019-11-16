@@ -1,42 +1,54 @@
 {
     "tabs": [
         {
-            "name": "potatoExample",
+            "name": "Drivetrain Currents",
             "series": [
                 {
-                    "name": "EXAMPLE_1",
+                    "name": "DRIVETRAIN LEFT1 Current",
                     "minY": 0,
-                    "maxY": 1,
+                    "maxY": 75,
                     "position": "left"
                 },
                 {
-                    "name": "EXAMPLE_2",
-                    "minY": 10,
-                    "maxY": 1000,
+                    "name": "DRIVETRAIN LEFT1 Voltage",
+                    "minY": -12,
+                    "maxY": 12,
+                    "position": "right"
+                },
+                {
+                    "name": "DRIVETRAIN RIGHT1 Current",
+                    "minY": 0,
+                    "maxY": 75,
+                    "position": "left"
+                },
+                {
+                    "name": "DRIVETRAIN RIGHT1 Voltage",
+                    "minY": -12,
+                    "maxY": 12,
                     "position": "right"
                 }
             ]
         },
         {
-            "name": "example2",
+            "name": "Elevator",
             "series": [
                 {
-                    "name": "EXAMPLE_2",
-                    "minY": 10,
-                    "maxY": 1000,
+                    "name": "ELEVATOR Left Voltage",
+                    "minY": -12,
+                    "maxY": 12,
                     "position": "left"
                 },
                 {
-                    "name": "EXAMPLE_3",
-                    "minY": -50,
-                    "maxY": 1000,
+                    "name": "ELEVATOR Right Voltage",
+                    "minY": -12,
+                    "maxY": 12,
+                    "position": "left"
+                },
+                {
+                    "name": "ELEVATOR Height",
+                    "minY": 0,
+                    "maxY": 1,
                     "position": "right"
-                },
-                {
-                    "name": "EXAMPLE_4",
-                    "minY": 100,
-                    "maxY": 1000,
-                    "position": "left"
                 }
             ]
         }
