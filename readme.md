@@ -1,5 +1,7 @@
 # Plotter
 
+![Plotter Screenshot](plotter-img.png)
+
 > Plotting tool for visualizing FRC robot logs from [HelixLogger](https://github.com/TripleHelixProgramming/HelixUtilities/wiki/HelixLogger)
 
 
