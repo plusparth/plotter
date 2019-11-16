@@ -1,0 +1,44 @@
+{
+    "tabs": [
+        {
+            "name": "potatoExample",
+            "series": [
+                {
+                    "name": "EXAMPLE_1",
+                    "minY": 0,
+                    "maxY": 1,
+                    "position": "left"
+                },
+                {
+                    "name": "EXAMPLE_2",
+                    "minY": 10,
+                    "maxY": 1000,
+                    "position": "right"
+                }
+            ]
+        },
+        {
+            "name": "example2",
+            "series": [
+                {
+                    "name": "EXAMPLE_2",
+                    "minY": 10,
+                    "maxY": 1000,
+                    "position": "left"
+                },
+                {
+                    "name": "EXAMPLE_3",
+                    "minY": -50,
+                    "maxY": 1000,
+                    "position": "right"
+                },
+                {
+                    "name": "EXAMPLE_4",
+                    "minY": 100,
+                    "maxY": 1000,
+                    "position": "left"
+                }
+            ]
+        }
+    ]
+}

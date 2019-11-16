@@ -8,6 +8,7 @@ const debug = require('electron-debug');
 const contextMenu = require('electron-context-menu');
 const config = require('./config');
 const menu = require('./menu');
+const settings = require('electron-settings');
 
 unhandled();
 debug();
@@ -31,11 +32,20 @@ app.setAppUserModelId('com.team4099.Plotter');
 let mainWindow;
 
 const createMainWindow = async () => {
+	var height = 400;
+	var width = 600;
+
+	if (settings.has("height")) {
+		height = settings.get("height");
+	}
+	if (settings.has("width")) {
+		width = settings.get("width");
+	}
 	const win = new BrowserWindow({
 		title: app.getName(),
 		show: false,
-		width: 600,
-		height: 400,
+		width: width,
+		height: height,
 		webPreferences: {
             nodeIntegration: true
         }
@@ -50,6 +60,12 @@ const createMainWindow = async () => {
 		// For multiple windows store them in an array
 		mainWindow = undefined;
 	});
+
+	win.on('resize', () => {
+		var size = win.getSize();
+		settings.set("height", size[1]);
+		settings.set("width", size[0]);
+	})
 
 	await win.loadFile(path.join(__dirname, 'index.html'));
 

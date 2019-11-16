@@ -1,10 +1,11 @@
-const $ = require('jquery')
-const parse = require('csv-parse')
-const fs = require('fs')
-const {dialog} = require('electron').remote
-const moment = require('moment')
-const randomcolor = require('randomcolor')
-const Chart = require('chart.js');
+const $ = require("jquery")
+const parse = require("csv-parse")
+const fs = require("fs")
+const {dialog} = require("electron").remote
+const moment = require("moment")
+const randomcolor = require("randomcolor")
+const Chart = require("chart.js");
+const settings = require("electron-settings");
 
 var tabHTML = `
     <div class="tab-item{{ active }}">
@@ -21,65 +22,38 @@ var activeTab = 0
 
 var myChart = null
 
-var config = {
-    tabs: [
-        {
-            name: "potatoExample",
-            series: [
-                {
-                    name: "EXAMPLE_1",
-                    minY: 0,
-                    maxY: 1,
-                    position: 'left'
-                },
-                {
-                    name: "EXAMPLE_2",
-                    minY: 10,
-                    maxY: 1000,
-                    position: 'right'
-                }
-            ]
-        },
-        {
-            name: "example2",
-            series: [
-                {
-                    name: "EXAMPLE_2",
-                    minY: 10,
-                    maxY: 1000,
-                    position: 'left'
-                },
-                {
-                    name: "EXAMPLE_3",
-                    minY: -50,
-                    maxY: 1000,
-                    position: 'right'
-                },
-                {
-                    name: "EXAMPLE_4",
-                    minY: 100,
-                    maxY: 1000,
-                    position: 'left'
-                }
-            ]
-        }
-    ]
-}
+var config = null
 
 const parser = parse({
     delimiter: ",",
     columns: true
 })
 
-$("#tabs").on('click', '.tab-item', function() {
-    var $tab = $(this).closest('div')
+function configLoad(files) {
+    if (files !== undefined) {
+        let file = files[0]
+        if (fs.existsSync(file)) {
+            config = JSON.parse(fs.readFileSync(file))
+            settings.set("config", file)
+            for (var i = 0; i < config.tabs.length; i++) {
+                createTab(config.tabs[i].name, i === 0)
+            }
+            if (fileLoaded) {
+                renderGraphs(activeTab)
+            }
+        }
+    }
+}
+
+$("#tabs").on("click", ".tab-item", function() {
+    let $tab = $(this).closest("div")
     console.log("New tab clicked")
     console.log($(this))
     if ($tab.attr("id") === "newTab") {
         return
     }
     if (!$tab.hasClass("active")) {
-        for (var i = 0; i < config.tabs.length; i++) {
+        for (let i = 0; i < config.tabs.length; i++) {
             console.log(config.tabs[i].name)
             console.log($tab.text().trim())
             if ($tab.text().trim() == config.tabs[i].name) {
@@ -98,20 +72,31 @@ $("#tabs").on('click', '.tab-item', function() {
 $("#file-picker").click(function() {
     console.log("Seeing file")
     dialog.showOpenDialog({
-        properties: ['openFile'],
+        properties: ["openFile"],
         filters: [
-            { name: 'CSVs', extensions: ['csv', 'tsv', 'gif'] },
-            { name: 'All Files', extensions: ['*'] }
+            { name: "CSVs", extensions: ["csv", "tsv", "gif"] },
+            { name: "All Files", extensions: ["*"] }
           ]
     }, fileLoad);
 })
 
+$("#config-picker").click(function() {
+    dialog.showOpenDialog({
+        properties: ["openFile"],
+        filters: [
+            { name: "JSONs", extensions: ["json"] },
+            { name: "All Files", extensions: ["*"] }
+        ]
+    }, configLoad)
+})
+
 function fileLoad(files) {
     if (files !== undefined) {
+        settings.set("csv", files[0])
         // handle files
         fs.createReadStream(files[0])
             .pipe(parser)
-            .on('readable', function() {
+            .on("readable", function() {
                 let data
                 while (data = parser.read()) {
                     // TODO: fix this thing to actually use the correct key
@@ -135,7 +120,7 @@ function fileLoad(files) {
                     });
                 }
             })
-            .on('end', finishFileLoad);
+            .on("end", finishFileLoad);
     }
 }
 
@@ -145,12 +130,14 @@ function finishFileLoad() {
 }
 
 function renderGraphs(tabId) {
-    var ctx = $("#chart")
-    var datasets = []
-    var yAxes = []
+    if (config == null) 
+        return
+    let ctx = $("#chart")
+    let datasets = []
+    let yAxes = []
 
     config.tabs[tabId].series.forEach(series => {
-        var color = randomcolor()
+        let color = randomcolor()
         console.log(series)
         datasets.push({
             label: series.name,
@@ -161,7 +148,7 @@ function renderGraphs(tabId) {
             yAxisID: series.name
         })
         yAxes.push({
-            type: 'linear',
+            type: "linear",
             display: true,
             position: series.position,
             id: series.name,
@@ -186,24 +173,24 @@ function renderGraphs(tabId) {
             },
             options: {
                 responsive: true,
-                hoverMode: 'index',
+                hoverMode: "index",
                 stacked: false,
                 title: {
                     display: false,
-                    // text: 'Chart.js Line Chart - Multi Axis'
+                    // text: "Chart.js Line Chart - Multi Axis"
                 },
                 scales: {
                     xAxes: [{
-                        type: 'time',
+                        type: "time",
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'Timestamp'
+                            labelString: "Timestamp"
                         },
                         ticks: {
                             major: {
-                                fontStyle: 'bold',
-                                fontColor: '#FF0000'
+                                fontStyle: "bold",
+                                fontColor: "#FF0000"
                             }
                         }
                     }],
@@ -215,24 +202,24 @@ function renderGraphs(tabId) {
         myChart.data = { datasets: datasets }
         myChart.options = {
             responsive: true,
-            hoverMode: 'index',
+            hoverMode: "index",
             stacked: false,
             title: {
                 display: false,
-                // text: 'Chart.js Line Chart - Multi Axis'
+                // text: "Chart.js Line Chart - Multi Axis"
             },
             scales: {
                 xAxes: [{
-                    type: 'time',
+                    type: "time",
                     display: true,
                     scaleLabel: {
                         display: true,
-                        labelString: 'Timestamp'
+                        labelString: "Timestamp"
                     },
                     ticks: {
                         major: {
-                            fontStyle: 'bold',
-                            fontColor: '#FF0000'
+                            fontStyle: "bold",
+                            fontColor: "#FF0000"
                         }
                     }
                 }],
@@ -244,7 +231,7 @@ function renderGraphs(tabId) {
 }
 
 function createTab(title, setActive) {
-    var currentTabText = tabHTML.replace("{{ title }}", title)
+    let currentTabText = tabHTML.replace("{{ title }}", title)
     if (setActive) {
         currentTabText = currentTabText.replace("{{ active }}", " active")
     } else {
@@ -254,7 +241,11 @@ function createTab(title, setActive) {
 }
 
 $(document).ready(function() {
-    for (var i = 0; i < config.tabs.length; i++) {
-        createTab(config.tabs[i].name, i === 0)
+    if (settings.has("config")) {
+        configLoad([settings.get("config")])
+    }
+    
+    if (settings.has("csv")) {
+        fileLoad([settings.get("csv")])
     }
 })
