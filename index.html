@@ -1,47 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Photon</title>
+	<head>
+		<title>Plotter</title>
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/photon.min.css">
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="css/photon.min.css">
 
-    <!-- Javascript -->
-    <script src="js/menu.js" charset="utf-8"></script>
-  </head>
-  <body>
-    <div class="window">
+		<!-- Javascript -->
+	</head>
+	<body>
+		<div class="window">
 
-      <!-- .toolbar-header sits at the top of your app -->
-      <header class="toolbar toolbar-header">
-        <h1 class="title">Photon</h1>
-      </header>
-      <div class="tab-group">
-        <div class="tab-item">
-          <span class="icon icon-cancel icon-close-tab"></span>
-          Tab
-        </div>
-        <div class="tab-item active">
-          <span class="icon icon-cancel icon-close-tab"></span>
-          Tab active
-        </div>
-        <div class="tab-item">
-          <span class="icon icon-cancel icon-close-tab"></span>
-          Tab
-        </div>
-        <div class="tab-item tab-item-fixed">
-          <span class="icon icon-plus"></span>
-        </div>
-      </div>
+			<!-- .toolbar-header sits at the top of your app -->
+			<header class="toolbar toolbar-header">
+				<div class="toolbar-actions">
+							<button class="btn btn-default" id="file-picker">
+								<span class="icon icon-database icon-text"></span>
+								Choose log file
+							</button>
+			</header>
+			<div class="tab-group" id="tabs">
+                <div class="tab-item tab-item-fixed" id="newTab">
+                    <span class="icon icon-plus"></span>
+                </div>
+			</div>
 
-      <!-- Your app's content goes inside .window-content -->
-      <div class="window-content">
-          <button class="btn btn-primary" id="file-picker">Choose log file</button>
-          <canvas id="chart">
+			<!-- Your app's content goes inside .window-content -->
+			<div class="window-content">
+					<canvas id="chart">
 
-          </canvas>
-      </div>
-    </div>
-    <script src="js/plotter.js"></script>
-  </body>
+					</canvas>
+			</div>
+		</div>
+		<script src="js/plotter.js"></script>
+	</body>
 </html>
