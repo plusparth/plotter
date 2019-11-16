@@ -25,6 +25,9 @@ var myChart = null
 
 var config = null
 
+var minX = 0
+var maxX = 0
+
 var options = {
     responsive: true,
     hoverMode: "index",
@@ -53,8 +56,8 @@ var options = {
     elements: { 
         point: { 
             radius: 0,
-            hitRadius: 10,
-            hoverRadius: 10
+            hitRadius: 5,
+            hoverRadius: 3
         },
         line: {
             borderWidth: 1,
@@ -64,6 +67,15 @@ var options = {
     tooltips: {
         mode: "index",
         position: "nearest"
+    }
+}
+
+var sliderFormatter = {
+    to: function(value) {
+        return results["match_time"][Math.trunc(value)].y
+    },
+    from: function(value) {
+        return 0
     }
 }
 
@@ -137,6 +149,7 @@ $("#config-picker").click(function() {
 function fileLoad(files) {
     if (files !== undefined) {
         settings.set("csv", files[0])
+        maxX = 0
         // handle files
         try {
         document.title = files[0]
@@ -145,11 +158,11 @@ function fileLoad(files) {
             .on("readable", function() {
                 let data
                 while (data = parser.read()) {
-                    console.log(data)
+                    // console.log(data)
                     // TODO: fix this thing to actually use the correct key
-                    var tsKey = Object.keys(data)[0]
-                    console.log(moment(data[tsKey]))
-                    console.log(tsKey)
+                    let tsKey = Object.keys(data)[0]
+                    // console.log(moment(data[tsKey]))
+                    // console.log(tsKey)
                     Object.keys(data).forEach(key => {
                         if (key == tsKey) {
                             // console.log("On timestamp!")
@@ -163,6 +176,9 @@ function fileLoad(files) {
                                     y: data[key]
                                 }
                             )
+                            if (results[key].length > maxX) {
+                                maxX = results[key].length
+                            }
                         }
                     });
                 }
@@ -225,11 +241,38 @@ function renderGraphs(tabId) {
             },
             options: options
         })
+
+        noUiSlider.create($("#slider")[0], {
+            start: [minX, maxX - 1],
+            step: 1,
+            connect: true,
+            range: {
+                'min': minX,
+                'max': maxX - 1
+            },
+            tooltips: [sliderFormatter, sliderFormatter] ,
+        });
+        $("#slider")[0].noUiSlider.on("set", changeRange)
     } else {
         myChart.data = { datasets: datasets }
         myChart.options = options
         myChart.update()
+        $("#slider")[0].noUiSlider.updateOptions({
+            range: {
+                'min': minX,
+                'max': maxX - 1
+            }
+        }, true)
     }
+}
+
+function changeRange() {
+    let newRange = $("#slider")[0].noUiSlider.get()
+    for (let i = 0; i < myChart.data.datasets.length; i++) {
+        let name = myChart.data.datasets[i].label
+        myChart.data.datasets[i].data = results[name].slice(newRange[0], newRange[1] + 1)
+    }
+    myChart.update()
 }
 
 function createTab(title, setActive) {

@@ -4,7 +4,9 @@
 		<title>Plotter</title>
 
 		<!-- Stylesheets -->
-		<link rel="stylesheet" href="css/photon.min.css">
+        <link rel="stylesheet" href="css/photon.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="node_modules/nouislider/distribute/nouislider.min.css">
 
 		<!-- Javascript -->
 	</head>
@@ -33,9 +35,13 @@
 			<div class="window-content">
 					<canvas id="chart">
 
-					</canvas>
-			</div>
-		</div>
+                    </canvas>
+            </div>
+            <footer class="toolbar toolbar-footer">
+                    <div class="nouislider" id="slider"></div>
+            </footer>
+        </div>
+        
 		<script src="js/plotter.js"></script>
 	</body>
 </html>
