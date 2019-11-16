@@ -60,13 +60,20 @@ var options = {
             hoverRadius: 3
         },
         line: {
-            borderWidth: 1,
+            borderWidth: 1.5,
             tension: 0
         }
     },
     tooltips: {
         mode: "index",
-        position: "nearest"
+        position: "nearest",
+        callbacks: {
+            beforeTitle: function(tooltipItem, data) {
+                console.log(tooltipItem)
+                // console.log(results["match_time"])
+                return "Match time remaining: " + results["match_time"][tooltipItem[0].index].y + "s";
+            }
+        }
     }
 }
 
@@ -250,7 +257,7 @@ function renderGraphs(tabId) {
                 'min': minX,
                 'max': maxX - 1
             },
-            tooltips: [sliderFormatter, sliderFormatter] ,
+            tooltips: [sliderFormatter, sliderFormatter]
         });
         $("#slider")[0].noUiSlider.on("set", changeRange)
     } else {
