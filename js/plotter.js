@@ -69,7 +69,7 @@ var options = {
         position: "nearest",
         callbacks: {
             beforeTitle: function(tooltipItem, data) {
-                console.log(tooltipItem)
+                // console.log(tooltipItem)
                 // console.log(results["match_time"])
                 return "Match time remaining: " + results["match_time"][tooltipItem[0].index].y + "s";
             }
@@ -110,15 +110,15 @@ function configLoad(files) {
 
 $("#tabs").on("click", ".tab-item", function() {
     let $tab = $(this).closest("div")
-    console.log("New tab clicked")
-    console.log($(this))
+    // console.log("New tab clicked")
+    // console.log($(this))
     if ($tab.attr("id") === "newTab") {
         return
     }
     if (!$tab.hasClass("active")) {
         for (let i = 0; i < config.tabs.length; i++) {
-            console.log(config.tabs[i].name)
-            console.log($tab.text().trim())
+            // console.log(config.tabs[i].name)
+            // console.log($tab.text().trim())
             if ($tab.text().trim() == config.tabs[i].name) {
                 activeTab = i
                 if (fileLoaded) {
@@ -208,37 +208,50 @@ function renderGraphs(tabId) {
         return
     let ctx = $("#chart")
     let datasets = []
+    let axisLabels = []
     let yAxes = []
 
     config.tabs[tabId].series.forEach(series => {
         let color = randomcolor()
-        console.log(series)
+        if (series.color !== "random") {
+            color = Color(series.color)
+        }
+        // console.log(series)
         datasets.push({
             label: series.name,
             backgroundColor: color,
             borderColor: color,
             fill: false,
             data: results[series.name],
-            yAxisID: series.name
+            yAxisID: series.axisLabel
         })
-        yAxes.push({
-            type: "linear",
-            display: true,
-            position: series.position,
-            id: series.name,
-            ticks: {
-                min: series.minY,
-                max: series.maxY
-            },
-            scaleLabel: {
-                display: true,
-                labelString: series.name
-            }
-        })
+        axisLabels.push(series.axisLabel)
     })
 
-    console.log(datasets)
-    console.log(results)
+    config.axes.forEach(axis => {
+        // console.log(axis.label)
+        if (axisLabels.includes(axis.label)) {
+            yAxes.push({
+                type: "linear",
+                display: true,
+                position: axis.position,
+                id: axis.label,
+                ticks: {
+                    min: axis.minY,
+                    max: axis.maxY
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: axis.label
+                }
+            })
+        }
+    })
+
+    // console.log(config.axes)
+    // console.log(datasets)
+    // console.log(axisLabels)
+    // console.log(yAxes)
 
     options.scales.yAxes = yAxes
     if (myChart == null) {

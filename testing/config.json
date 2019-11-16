@@ -5,27 +5,23 @@
             "series": [
                 {
                     "name": "DRIVETRAIN LEFT1 Current",
-                    "minY": 0,
-                    "maxY": 75,
-                    "position": "left"
+                    "axisLabel": "Current Draw (A)",
+                    "color": "random"
                 },
                 {
                     "name": "DRIVETRAIN LEFT1 Voltage",
-                    "minY": -12,
-                    "maxY": 12,
-                    "position": "right"
+                    "axisLabel": "Voltage",
+                    "color": "random"
                 },
                 {
                     "name": "DRIVETRAIN RIGHT1 Current",
-                    "minY": 0,
-                    "maxY": 75,
-                    "position": "left"
+                    "axisLabel": "Current Draw (A)",
+                    "color": "random"
                 },
                 {
                     "name": "DRIVETRAIN RIGHT1 Voltage",
-                    "minY": -12,
-                    "maxY": 12,
-                    "position": "right"
+                    "axisLabel": "Voltage",
+                    "color": "random"
                 }
             ]
         },
@@ -34,23 +30,41 @@
             "series": [
                 {
                     "name": "ELEVATOR Left Voltage",
-                    "minY": -12,
-                    "maxY": 12,
-                    "position": "left"
+                    "axisLabel": "Voltage",
+                    "color": "random"
                 },
                 {
                     "name": "ELEVATOR Right Voltage",
-                    "minY": -12,
-                    "maxY": 12,
-                    "position": "left"
+                    "axisLabel": "Voltage",
+                    "color": "random"
                 },
                 {
                     "name": "ELEVATOR Height",
-                    "minY": 0,
-                    "maxY": 1,
-                    "position": "right"
+                    "axisLabel": "Height (%)",
+                    "color": "random"
                 }
             ]
         }
+    ],
+    "axes": [
+        {
+            "label": "Voltage",
+            "minY": -12,
+            "maxY": 12,
+            "position": "left"
+        },
+        {
+            "label": "Current Draw (A)",
+            "minY": 0,
+            "maxY": 100,
+            "position": "right"
+        },
+        {
+            "label": "Height (%)",
+            "minY": 0,
+            "maxY": 1,
+            "position": "right"
+        }
+
     ]
 }
