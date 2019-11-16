@@ -44,7 +44,10 @@
 		"envs": [
 			"node",
 			"browser"
-		]
+		],
+		"rules": {
+			"new-cap": "warn"
+		}
 	},
 	"np": {
 		"publish": false,

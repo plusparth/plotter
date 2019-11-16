@@ -6,9 +6,8 @@ const {is} = require('electron-util');
 const unhandled = require('electron-unhandled');
 const debug = require('electron-debug');
 const contextMenu = require('electron-context-menu');
-const config = require('./config');
-const menu = require('./menu');
 const settings = require('electron-settings');
+const menu = require('./menu');
 
 unhandled();
 debug();
@@ -32,23 +31,25 @@ app.setAppUserModelId('com.team4099.Plotter');
 let mainWindow;
 
 const createMainWindow = async () => {
-	var height = 400;
-	var width = 600;
+	let height = 400;
+	let width = 600;
 
-	if (settings.has("height")) {
-		height = settings.get("height");
+	if (settings.has('height')) {
+		height = settings.get('height');
 	}
-	if (settings.has("width")) {
-		width = settings.get("width");
+
+	if (settings.has('width')) {
+		width = settings.get('width');
 	}
+
 	const win = new BrowserWindow({
 		title: app.getName(),
 		show: false,
-		width: width,
-		height: height,
+		width,
+		height,
 		webPreferences: {
-            nodeIntegration: true
-        }
+			nodeIntegration: true
+		}
 	});
 
 	win.on('ready-to-show', () => {
@@ -62,10 +63,10 @@ const createMainWindow = async () => {
 	});
 
 	win.on('resize', () => {
-		var size = win.getSize();
-		settings.set("height", size[1]);
-		settings.set("width", size[0]);
-	})
+		const size = win.getSize();
+		settings.set('height', size[1]);
+		settings.set('width', size[0]);
+	});
 
 	await win.loadFile(path.join(__dirname, 'index.html'));
 
@@ -104,6 +105,6 @@ app.on('activate', async () => {
 	Menu.setApplicationMenu(menu);
 	mainWindow = await createMainWindow();
 
-	// const favoriteAnimal = config.get('favoriteAnimal');
+	// Const favoriteAnimal = config.get('favoriteAnimal');
 	// mainWindow.webContents.executeJavaScript(`document.querySelector('header p').textContent = 'Your favorite animal is ${favoriteAnimal}'`);
 })();
