@@ -276,6 +276,7 @@ function changeRange() {
 	const newRange = $('#slider')[0].noUiSlider.get();
 	for (let i = 0; i < myChart.data.datasets.length; i++) {
 		const name = myChart.data.datasets[i].label;
+		console.log("i: " + i)
 		myChart.data.datasets[i].data = results[name].slice(newRange[0], newRange[1] + 1);
 	}
 
