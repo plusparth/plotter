@@ -80,6 +80,9 @@
 				"deb"
 			],
 			"category": "Network;Chat"
+		},
+		"scripts": {
+			"publishMac": "GH_TOKEN=5dd7feec83338d183cb57c23a3812baac1ffdf71 build -p always"
 		}
 	}
 }
