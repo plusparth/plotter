@@ -19,7 +19,7 @@
 		"release": "np"
 	},
 	"dependencies": {
-		"chart.js": "^2.9.3",
+		"chart.js": "^2.9.4",
 		"csv-parse": "^4.7.0",
 		"electron-context-menu": "^0.15.0",
 		"electron-debug": "^3.0.0",
