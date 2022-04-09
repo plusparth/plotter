@@ -29,7 +29,7 @@
 		"electron-updater": "^4.0.6",
 		"electron-util": "^0.12.0",
 		"jquery": "^3.4.1",
-		"moment": "^2.24.0",
+		"moment": "^2.29.2",
 		"nouislider": "^14.0.3",
 		"randomcolor": "^0.5.4",
 		"remote": "^0.2.6"
